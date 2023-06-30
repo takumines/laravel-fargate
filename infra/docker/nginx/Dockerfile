@@ -1,20 +1,22 @@
-FROM node:16-alpine as node
-FROM nginx:1.20-alpine
-LABEL maintainer="ucan-lab <yes@u-can.pro>"
-SHELL ["/bin/ash", "-oeux", "pipefail", "-c"]
+# Define the Node.js build stage
+FROM node:16-buster AS build-stage
 
+WORKDIR /app
+
+# Nginx stage
+FROM nginx:1.20-alpine
+
+# Set timezone
 ENV TZ=UTC
 
+# Update apk and install dependencies
 RUN apk update && \
   apk add --update --no-cache --virtual=.build-dependencies g++
 
-# node command
-COPY --from=node /usr/local/bin /usr/local/bin
-# npm command
-COPY --from=node /usr/local/lib /usr/local/lib
-# yarn command
-COPY --from=node /opt /opt
-# nginx config file
+# Install Node.js and npm
+RUN apk add --update nodejs npm
+
+# Copy Nginx configuration files
 COPY ./infra/docker/nginx/*.conf /etc/nginx/conf.d/
 
 WORKDIR /work/backend
