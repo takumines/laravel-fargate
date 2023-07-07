@@ -19,4 +19,6 @@ RUN apk add --update nodejs npm
 # Copy Nginx configuration files
 COPY ./infra/docker/nginx/*.conf /etc/nginx/conf.d/
 
+COPY ./backend/public /work/backend/public
+
 WORKDIR /work/backend
