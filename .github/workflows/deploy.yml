@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 env:
   AWS_REGION: ap-northeast-1
   IMAGE_TAG: ${{ github.sha }}
